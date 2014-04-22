@@ -8,6 +8,10 @@
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
+;;========================================
+;; start the emacsserver that listens to emacsclient
+(server-start)
+
 (unless (package-installed-p 'popup)
   (package-install 'popup))
 
@@ -15,6 +19,7 @@
   (package-install 'ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.builder$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.jbuilder$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
 
 (unless (package-installed-p 'inf-ruby)
   (package-install 'inf-ruby))
@@ -33,6 +38,23 @@
 
 (unless (package-installed-p 'ruby-electric)
   (package-install 'ruby-electric))
+(defun ruby-insert-end () 
+  "Insert \"end\" at point and reindent current line." 
+  (interactive) 
+  (insert "end") 
+  (ruby-indent-line t) 
+  (end-of-line))
+
+;;(add-hook 'ruby-mode-hook 'ruby-electric-mode)
+
+(unless (package-installed-p 'ruby-dev)
+  (package-install 'ruby-dev))
+
+(unless (package-installed-p 'ruby-block)
+  (package-install 'ruby-block))
+
+(unless (package-installed-p 'ruby-refactor)
+  (package-install 'ruby-refactor))
 
 (unless (package-installed-p 'robe)
   (package-install 'robe))
@@ -233,3 +255,7 @@
 
 (setq python-shell-interpreter "ipython")
 (require 'rscope)
+
+(tool-bar-mode -1)
+(setq inhibit-startup-message t)
+(setq initial-scratch-message "")
