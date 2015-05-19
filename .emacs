@@ -46,6 +46,12 @@
   (end-of-line))
 
 ;;(add-hook 'ruby-mode-hook 'ruby-electric-mode)
+(unless (package-installed-p 'latex-extra)
+  (package-install 'latex-extra))
+
+(unless (package-installed-p 'latex-preview-pane-mode)
+  (package-install 'latex-preview-pane-mode)
+(latex-preview-pane-enable)
 
 (unless (package-installed-p 'ruby-dev)
   (package-install 'ruby-dev))
@@ -259,3 +265,23 @@
 (tool-bar-mode -1)
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
+
+(when (display-graphic-p) 
+  (setq fonts 
+        (cond ((eq system-type 'darwin)     '("Monaco"     "STHeiti")) 
+              ((eq system-type 'gnu/linux)  '("Menlo"     "WenQuanYi Zen Hei")) 
+              ((eq system-type 'windows-nt) '("Consolas"  "Microsoft Yahei")))) 
+
+  (setq face-font-rescale-alist '(("STHeiti" . 1.2) ("Microsoft Yahei" . 1.2) ("WenQuanYi Zen Hei" . 1.2))) 
+  (set-face-attribute 'default nil :font 
+                      (format "%s:pixelsize=%d" (car fonts) 14)) 
+  (dolist (charset '(kana han symbol cjk-misc bopomofo)) 
+    (set-fontset-font (frame-parameter nil 'font) charset 
+                      (font-spec :family (car (cdr fonts)))))) 
+
+(add-hook 'LaTeX-mode-hook (lambda()
+                             (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+                             (setq TeX-command-default "XeLaTeX")
+                             (setq TeX-save-query  nil )
+                             (setq TeX-show-compilation t) 
+                             ))
